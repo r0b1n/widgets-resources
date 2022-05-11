@@ -184,9 +184,11 @@ async function updateWidgetChangelogs(widgetsFolders) {
 async function updateModuleChangelogs(moduleInfo, nativeWidgetsChangelogs) {
     console.log("Updating module changelogs..");
     const moduleChangelogs = await getUnreleasedChangelogs(moduleInfo);
+
     const newModuleChangelogs = nativeWidgetsChangelogs?.length
         ? `${moduleChangelogs}\n\n${nativeWidgetsChangelogs.join("\n\n")}`
         : moduleChangelogs;
+
     if (newModuleChangelogs) {
         console.log(`Writing "${moduleInfo.nameWithSpace}" changelogs to ${moduleInfo.changelogPath}`);
         await writeToModuleChangelogs(newModuleChangelogs, moduleInfo);
