@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [2.4.0] Data Widgets - 2022-4-22
+## [2.4.0] Data Widgets - 2022-04-22
 
 ### [2.3.0] Datagrid
 
@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue with widgets not rendering on full width in datagrid cells. (Ticket #143363)
 
-## [2.3.1] Data Widgets - 2022-4-13
+## [2.3.1] Data Widgets - 2022-04-13
 
 ### [2.3.1] DatagridDateFilter
 
@@ -38,7 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue with column hiding behaviour. Now user can't uncheck last visible column in the datagrid. (Ticket #144500)
 
-## [2.3.0] Data Widgets - 2022-2-10
+## [2.3.0] Data Widgets - 2022-02-10
 
 ### [2.3.0] DatagridDateFilter
 
@@ -50,7 +50,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue with locale date format when typing it manually.
 
-## [2.2.2] Data Widgets - 2022-1-19
+## [2.2.2] Data Widgets - 2022-01-19
 
 ### [2.2.1] DatagridDropdownFilter
 
@@ -64,7 +64,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue with column selector on Windows machines (Ticket #139234).
 
-## [2.2.1] Data Widgets - 2022-1-6
+## [2.2.1] Data Widgets - 2022-01-06
 
 ### Fixed
 
@@ -93,6 +93,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ### [2.2.0] DatagridDropdownFilter
@@ -100,6 +101,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ### [2.2.0] DatagridNumberFilter
@@ -107,6 +109,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ### [2.2.0] DatagridTextFilter
@@ -114,6 +117,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ### [2.2.0] Datagrid
@@ -121,7 +125,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added "Tooltip" property for column, which allow you to control text that will be seen when hovering cell.
+
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ### [1.1.0] DropdownSort
@@ -129,6 +135,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ### [1.1.0] Gallery
@@ -136,6 +143,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ### [1.1.0] TreeNode
@@ -143,6 +151,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 #### Added
 
 -   We added dark mode to Structure mode preview.
+
 -   We added dark icons for Tile and List view.
 
 ## [2.1.1] Data Widgets - 2021-12-10
@@ -157,7 +166,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We aligned week days names with date picker widget from Studio Pro.
 
-## [2.1.0] Data Widgets - 2021-12-3
+## [2.1.0] Data Widgets - 2021-12-03
 
 ### [2.1.0] Datagrid
 
@@ -193,13 +202,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -   We fixed an issue causing a content inside rows to be re-rendered while using filtering.
 
-## [2.0.2] DataWidgets - 2021-10-13
+## [2.0.2] Data Widgets - 2021-10-13
 
 ### Filter widgets
 
 #### Added
 
 -   We added the possibility to store the filter value in an attribute and trigger an onChange event on every filter change.
+
 -   We added a "Enable advanced options" toggle for Studio users.
 
 ### Data Grid 2, Gallery & Tree Node
@@ -237,13 +247,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 -   We added the possibility to reuse all data grid filters with Gallery widget.
+
 -   We added Gallery widget.
+
 -   We added Tree-node widget.
+
 -   We added Drop-down sort widget.
 
 ### Changed
 
 -   We renamed Datagrid date filter to Date filter.
+
 -   We renamed Datagrid drop-down filter to Drop-down filter.
+
 -   We renamed Datagrid number filter to Number filter.
+
 -   We renamed Datagrid text filter to Text filter.
