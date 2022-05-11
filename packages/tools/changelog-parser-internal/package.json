@@ -1,0 +1,26 @@
+{
+  "name": "@mendix/changelog-parser-internal",
+  "version": "1.0.0",
+  "description": "Reads and writes changelog files",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "tsc --watch",
+    "prebuild": "rimraf ./dist",
+    "build": "tsc",
+    "build-parser": "pegjs ./parser/module/module.pegjs && pegjs ./parser/widget/widget.pegjs",
+    "lint": "eslint --config ../../../.eslintrc.js --ext .jsx,.js,.ts,.tsx src/",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "pegjs": "^0.10.0",
+    "eslint": "^7.20.0",
+    "typescript": "^4.5.4",
+    "rimraf": "^2.7.1"
+  },
+  "files": [
+    "dist",
+    "parser"
+  ]
+}

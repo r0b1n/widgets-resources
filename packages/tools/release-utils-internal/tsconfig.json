@@ -1,16 +1,18 @@
 {
-    "include": ["./lib"],
+    "include": ["./src"],
     "compilerOptions": {
+        "types": ["node"],
+        "outDir": "./dist",
+
         "strict": true,
         "noEmitOnError": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": false,
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "noUnusedLocals": true,
         "noUnusedParameters": true,
         "forceConsistentCasingInFileNames": true,
-        "types": ["node"],
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "declaration": true
     }
 }
