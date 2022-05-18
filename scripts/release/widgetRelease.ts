@@ -109,7 +109,6 @@ async function updateChangelogsAndCreatePR(packageInfo: PackageInfo) {
 
     console.log("Creating pull request");
     await createGithubPRFrom({
-        repo: packageInfo.repositoryUrl,
         title: `${packageInfo.packageFullName}: Updating changelogs`,
         body: "This is an automated PR.",
         base: "master",
