@@ -21,14 +21,8 @@ async function main() {
         throw new Error(`${widgetScope} is not a valid widget package.`);
     }
 
-    const {
-        releaseMpkPath,
-        repositoryUrl,
-        unreleasedChangelogs,
-        version,
-        widgetName,
-        changelogPath
-    } = await getWidgetReleaseInformation(widgetScope);
+    const { releaseMpkPath, repositoryUrl, unreleasedChangelogs, version, widgetName, changelogPath } =
+        await getWidgetReleaseInformation(widgetScope);
 
     if (!unreleasedChangelogs) {
         throw new Error(`No unreleased changes found in the CHANGELOG.md for ${widgetName} ${version}.`);
@@ -44,6 +38,8 @@ async function main() {
         mpkOutput: releaseMpkPath,
         isDraft: true
     });
+
+    // update changelog
     console.log("Updating widget CHANGELOG.md...");
     await writeToWidgetChangelogs(unreleasedChangelogs, { changelogPath, version });
     console.log("Creating pull request for CHANGELOG.md...");
@@ -52,15 +48,24 @@ async function main() {
 }
 
 async function getWidgetReleaseInformation(widgetScope) {
+    // folder with all the widgets
     const pluggableWidgetsFolder = join(process.cwd(), "packages/pluggableWidgets");
+
+    // list of widgets
     const pluggableWidgets = await readdir(pluggableWidgetsFolder);
 
+    // check if widget exists
     if (!pluggableWidgets.includes(widgetScope)) {
         throw new Error(`${widgetScope} is not a valid pluggable widget.`);
     }
 
+    // full path to the widget folder
     const widgetPath = join(pluggableWidgetsFolder, widgetScope);
+
+    // full path to package json
     const pkgPath = join(widgetPath, "package.json");
+
+    // extract widget info
     const { name, widgetName, version, repository } = require(pkgPath);
 
     console.log(`Getting the widget release information for ${widgetName} widget...`);

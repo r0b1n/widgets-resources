@@ -2,9 +2,10 @@ import { exec } from "child_process";
 import { readdir } from "fs/promises";
 import { extname, resolve } from "path";
 
-export function execShellCommand(cmd: string, workingDirectory: string = process.cwd()): Promise<string> {
+export function execShellCommand(cmd: string | string[], workingDirectory: string = process.cwd()): Promise<string> {
+    const command = Array.isArray(cmd) ? cmd.join(" && ") : cmd;
     return new Promise<string>((resolve, reject) => {
-        exec(cmd, { cwd: workingDirectory }, (error, stdout, stderr) => {
+        exec(command, { cwd: workingDirectory }, (error, stdout, stderr) => {
             if (error) {
                 console.warn(stderr);
                 console.warn(stdout);
@@ -39,7 +40,7 @@ export async function getFiles(dir: string, includeExtension: string[] = []): Pr
 
     const f = files.flat();
 
-    if (!includeExtension?.length) {
+    if (!includeExtension.length) {
         return f;
     }
 
