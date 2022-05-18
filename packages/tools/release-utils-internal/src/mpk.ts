@@ -1,20 +1,23 @@
 import { basename, join } from "path";
 
 import { execShellCommand, getFiles } from "./shell";
-import { ModuleInfo } from "./getPackageInfo";
+import { ModuleInfo } from "./package-info";
+import { Version } from "./version";
 
 // create docker image
 // run in docker
 
-async function ensureMxBuildDockerImageExists(mendixVersion: string) {
-    const existingImages = (await execShellCommand(`docker image ls -q mxbuild:${mendixVersion}`)).toString().trim();
+async function ensureMxBuildDockerImageExists(mendixVersion: Version) {
+    const version = mendixVersion.format();
+
+    const existingImages = (await execShellCommand(`docker image ls -q mxbuild:${version}`)).toString().trim();
     if (!existingImages) {
-        console.log(`Creating new mxbuild:${mendixVersion} docker image...`);
+        console.log(`Creating new mxbuild:${version} docker image...`);
         const dockerfilePath = join(process.cwd(), "packages/tools/pluggable-widgets-tools/scripts/mxbuild.Dockerfile");
         await execShellCommand(
             `docker build -f ${dockerfilePath} ` +
-                `--build-arg MENDIX_VERSION=${mendixVersion} ` +
-                `-t mxbuild:${mendixVersion} ${process.cwd()}`
+                `--build-arg MENDIX_VERSION=${version} ` +
+                `-t mxbuild:${version} ${process.cwd()}`
         );
     }
 }
@@ -22,12 +25,12 @@ async function ensureMxBuildDockerImageExists(mendixVersion: string) {
 export async function createModuleMpkInDocker(
     sourceDir: string,
     moduleName: string,
-    mendixVersion: `${number}.${number}.${number}`,
+    mendixVersion: Version,
     excludeFilesRegExp: string
 ): Promise<void> {
     await ensureMxBuildDockerImageExists(mendixVersion);
 
-    console.log(`Creating module ${moduleName} using mxbuild:${mendixVersion}...`);
+    console.log(`Creating module ${moduleName} using mxbuild:${mendixVersion.format()}...`);
     // Build testProject via mxbuild
     const projectFile = basename((await getFiles(sourceDir, [`.mpr`]))[0]);
     const args = [
@@ -38,7 +41,7 @@ export async function createModuleMpkInDocker(
         `/source/${projectFile}`,
         "&&",
 
-        // then create module
+        // and create module
         "mono",
         "/tmp/mxbuild/modeler/mxutil.exe create-module-package",
         excludeFilesRegExp ? `--exclude-files='${excludeFilesRegExp}'` : "",
@@ -47,7 +50,7 @@ export async function createModuleMpkInDocker(
     ].join(" ");
 
     await execShellCommand(
-        `docker run -t -v ${sourceDir}:/source ` + `--rm mxbuild:${mendixVersion} bash -c "${args}"`
+        `docker run -t -v ${sourceDir}:/source ` + `--rm mxbuild:${mendixVersion.format()} bash -c "${args}"`
     );
     console.log(`Module ${moduleName} created successfully.`);
 }
