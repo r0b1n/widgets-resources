@@ -1,4 +1,5 @@
 import { execShellCommand } from "./shell";
+import { fetch } from "./fetch";
 
 interface GitHubReleaseInfo {
     title: string;
@@ -53,29 +54,48 @@ export class GitHub {
             `gh release create --title "${title}" --notes "${notes}" ${draftArgument} ${repoArgument} "${tag}" "${filesToRelease}"`
         );
     }
+
+    async getReleaseIdByReleaseTag(releaseTag: string): Promise<string | undefined> {
+        console.log(`Searching for release from Github tag '${releaseTag}'`);
+        const release =
+            (await fetch<{ id: string }>(
+                "GET",
+                `https://api.github.com/repos/mendix/widgets-resources/releases/tags/${releaseTag}`
+            )) ?? [];
+
+        if (!release) {
+            return undefined;
+        }
+
+        return release.id;
+    }
+
+    async getReleaseArtifacts(releaseTag: string): Promise<Array<{ name: string; browser_download_url: string }>> {
+        const releaseId = this.getReleaseIdByReleaseTag(releaseTag);
+
+        if (!releaseId) {
+            throw new Error(`Could not find release with tag '${releaseTag}' on GitHub`);
+        }
+
+        return fetch<
+            Array<{
+                name: string;
+                browser_download_url: string;
+            }>
+        >("GET", `https://api.github.com/repos/mendix/widgets-resources/releases/${releaseId}/assets`);
+    }
+
+    async getMPKReleaseArtifactUrl(releaseTag: string): Promise<string> {
+        const artifacts = await this.getReleaseArtifacts(releaseTag);
+
+        const downloadUrl = artifacts.find(asset => asset.name.endsWith(".mpk"))?.browser_download_url;
+
+        if (!downloadUrl) {
+            throw new Error(`Could not retrieve MPK url from GitHub release with tag ${process.env.TAG}`);
+        }
+
+        return downloadUrl;
+    }
 }
 
 export default new GitHub();
-
-// export async function getReleaseMkpArtifacts(tag: string): Promise<string> {
-//     console.log(`Searching for release from Github tag ${tag}`);
-//
-//     const request = await fetch("GET", "https://api.github.com/repos/mendix/widgets-resources/releases?per_page=10");
-//
-//     const data = (await request) ?? [];
-//
-//     const releaseId = data.find(info => info.tag_name === tag)?.id;
-//     if (!releaseId) {
-//         throw new Error(`Could not find release with tag ${tag} on GitHub`);
-//     }
-//     const assetsRequest = await fetch(
-//         "GET",
-//         `https://api.github.com/repos/mendix/widgets-resources/releases/${releaseId}/assets`
-//     );
-//     const assetsData = (await assetsRequest) ?? [];
-//     const downloadUrl = assetsData.find(asset => asset.name.endsWith(".mpk"))?.browser_download_url;
-//     if (!downloadUrl) {
-//         throw new Error(`Could not retrieve MPK url from GitHub release with tag ${process.env.TAG}`);
-//     }
-//     return downloadUrl;
-// }
