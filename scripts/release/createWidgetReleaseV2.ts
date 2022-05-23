@@ -23,19 +23,28 @@ async function main(widgetScope: string): Promise<void> {
 
     const packageInfo = await getPackageInfo(widgetPath);
     const releaseMpkPath = getWidgetReleaseMPK(widgetPath);
+    const releaseTag = `${packageInfo.packageName}-v${packageInfo.version.format()}`;
 
-    // 2. Check if current version is already in CHANGELOG
+    // 2. Check prerequisites
+
+    // 2.1. Check if current version is already in CHANGELOG
     if (packageInfo.changelog.hasVersion(packageInfo.version)) {
         throw new Error(`Version ${packageInfo.version.format()} already exists in CHANGELOG.md file.`);
     }
 
-    // 3. Check if there is something to release (entries under "Unreleased" section)
+    // 2.2. Check if there is something to release (entries under "Unreleased" section)
     if (!packageInfo.changelog.hasUnreleasedLogs()) {
         throw new Error(
             `No unreleased changes found in the CHANGELOG.md for ${
                 packageInfo.packageName
             } ${packageInfo.version.format()}.`
         );
+    }
+
+    // 2.3. Check there is no release of that version on GitHub
+    const releaseId = await gh.getReleaseIdByReleaseTag(releaseTag);
+    if (releaseId) {
+        throw new Error(`There is already a release for tag '${releaseTag}'.`);
     }
 
     // 4. Do release
@@ -53,7 +62,7 @@ async function main(widgetScope: string): Promise<void> {
         notes: packageInfo.changelog.changelog.content[0].sections
             .map(s => `## ${s.type}\n\n${s.logs.map(l => `- ${l}`).join("\n\n")}`)
             .join("\n\n"),
-        tag: `${packageInfo.packageName}-v${packageInfo.version.format()}`,
+        tag: releaseTag,
         filesToRelease: releaseMpkPath,
         isDraft: true,
         repo: packageInfo.repositoryUrl
@@ -107,7 +116,7 @@ async function updateChangelogsAndCreatePR(packageInfo: PackageInfo, remoteName:
     console.log("Created PR for changelog updates.");
 }
 
-function makeid(length = 4) {
+function makeid(length = 4): string {
     let result = "";
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const charactersLength = characters.length;

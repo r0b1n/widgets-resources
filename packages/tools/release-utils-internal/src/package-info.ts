@@ -32,12 +32,18 @@ export interface PackageInfo {
     packageFullName: string;
 
     version: Version;
-    minimumMXVersion: Version;
 
     repositoryUrl: string;
 
     changelog: WidgetChangelogFileWrapper;
+}
 
+export interface WidgetPackageInfo extends PackageInfo {
+    packageFullName: string;
+
+    minimumMXVersion: Version;
+    repositoryUrl: string;
+    changelog: WidgetChangelogFileWrapper;
     testProjectUrl: string | undefined;
     testProjectBranchName: string | undefined;
 }
@@ -48,6 +54,27 @@ export interface ModuleInfo extends PackageInfo {
 }
 
 export async function getPackageInfo(path: string): Promise<PackageInfo> {
+    const pkgPath = join(path, `package.json`);
+    try {
+        await access(pkgPath);
+        const { name, version, repository } = (await import(pkgPath)) as PackageJsonFileContent;
+        return {
+            packageName: ensureString(name, "name"),
+            packageFullName: "",
+            version: ensureVersion(version),
+
+            repositoryUrl: ensureString(repository?.url, "repository.url"),
+
+            changelog: WidgetChangelogFileWrapper.fromFile(`${path}/CHANGELOG.md`)
+        };
+    } catch (error) {
+        console.log(error);
+        console.error(`ERROR: Path does not exist: ${pkgPath}`);
+        throw new Error("Error while reading package info at " + path);
+    }
+}
+
+export async function getWidgetPackageInfo(path: string): Promise<WidgetPackageInfo> {
     const pkgPath = join(path, `package.json`);
     try {
         await access(pkgPath);
@@ -69,6 +96,7 @@ export async function getPackageInfo(path: string): Promise<PackageInfo> {
             testProjectBranchName: testProject?.branchName
         };
     } catch (error) {
+        console.log(error);
         console.error(`ERROR: Path does not exist: ${pkgPath}`);
         throw new Error("Error while reading widget info at " + path);
     }
